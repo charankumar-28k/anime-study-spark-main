@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Zap, RefreshCw } from "lucide-react";
 import chibi from "@/assets/chibi-boy.png";
@@ -16,6 +16,16 @@ const QUOTES = [
 
 export function BoostMotivation() {
   const [idx, setIdx] = useState(0);
+  const [stars, setStars] = useState<{ top: string; left: string; fontSize: string; duration: number }[]>([]);
+
+  useEffect(() => {
+    setStars([...Array(8)].map(() => ({
+      top: `${Math.random() * 80}%`,
+      left: `${Math.random() * 90}%`,
+      fontSize: `${10 + Math.random() * 14}px`,
+      duration: 2 + Math.random() * 2,
+    })));
+  }, []);
 
   const next = () => setIdx(i => (i + 1) % QUOTES.length);
 
@@ -28,16 +38,16 @@ export function BoostMotivation() {
       <p className="text-xs text-muted-foreground">Need a little push?</p>
 
       <div className="relative flex-1 flex items-center justify-center my-2">
-        {[...Array(8)].map((_, i) => (
+        {stars.map((s, i) => (
           <motion.div
             key={i}
             animate={{ y: [0, -10, 0], opacity: [0.3, 1, 0.3] }}
-            transition={{ duration: 2 + Math.random() * 2, repeat: Infinity, delay: i * 0.3 }}
+            transition={{ duration: s.duration, repeat: Infinity, delay: i * 0.3 }}
             className="absolute text-neon-orange"
             style={{
-              top: `${Math.random() * 80}%`,
-              left: `${Math.random() * 90}%`,
-              fontSize: `${10 + Math.random() * 14}px`,
+              top: s.top,
+              left: s.left,
+              fontSize: s.fontSize,
               filter: "drop-shadow(0 0 6px oklch(0.78 0.18 60))",
             }}
           >
